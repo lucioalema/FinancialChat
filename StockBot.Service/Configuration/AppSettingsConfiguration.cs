@@ -1,4 +1,4 @@
-﻿namespace FinancialChat.Configuration
+﻿namespace StockBot.Service.Configuration
 {
     public class AppSettingsConfiguration
     {

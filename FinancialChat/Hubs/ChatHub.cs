@@ -1,16 +1,14 @@
-﻿using FinancialChat.Services;
+﻿using MassTransit;
 using Microsoft.AspNetCore.SignalR;
+using StockBot.Messages;
 
 namespace FinancialChat.Hubs
 {
     public class ChatHub : Hub
     {
-        private readonly IStockApi _stockApi;
-
-        public ChatHub(IStockApi stockApi)
-        {
-            _stockApi = stockApi;
-        }
+        private readonly ISendEndpointProvider _sendEndpointProvider;
+        private ISendEndpoint? _sendEndpoint;
+        public ChatHub(ISendEndpointProvider sendEndpointProvider) => _sendEndpointProvider = sendEndpointProvider;
 
         public async Task SendMessage(string user, string message)
         {
@@ -20,12 +18,8 @@ namespace FinancialChat.Hubs
                 var stock_code = message.Split("/stock=")[1].Split(' ').FirstOrDefault();
                 if (!string.IsNullOrEmpty(stock_code))
                 {
-                    var stock = await _stockApi.GetStock(stock_code);
-                    if (stock != null)
-                    {
-                        var botMessage = $"{stock.Split(',')[0]} quote is ${stock.Split(',')[6]} per share.";
-                        await Clients.All.SendAsync("ReceiveMessage", "BOT", botMessage);
-                    }
+                    _sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://localhost/stock"));
+                    await _sendEndpoint.Send<IGetStock>(new { StockCode = stock_code });
                 }
             }
         }

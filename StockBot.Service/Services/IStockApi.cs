@@ -1,6 +1,6 @@
 ﻿using Refit;
 
-namespace FinancialChat.Services
+namespace StockBot.Service.Services
 {
     public interface IStockApi
     {

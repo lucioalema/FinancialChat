@@ -1,30 +1,36 @@
-using FinancialChat.Configuration;
+using FinancialChat.Domain;
 using FinancialChat.Hubs;
-using FinancialChat.Services;
-using Microsoft.Extensions.Options;
-using Refit;
+using MassTransit;
+using StockBot.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+//MassTransit / RabbitMq
+builder.Services.AddMassTransit(mt =>
+{
+    mt.UsingRabbitMq((context, cfg) =>
+    {
+        var configuration = context.GetService<IConfiguration>();
+        var busConfig = configuration.GetSection("BusHostConfiguration").Get<BusHostConfiguration>();
+        var url = $"{busConfig.ServiceUri.TrimEnd('/')}";
+        cfg.Host(new Uri(url), h =>
+        {
+            h.Username(busConfig.Username);
+            h.Password(busConfig.Password);
+        });
+
+        MessageDataDefaults.ExtraTimeToLive = TimeSpan.FromDays(1);
+        MessageDataDefaults.Threshold = 2000;
+        MessageDataDefaults.AlwaysWriteToRepository = false;
+    });
+
+    mt.AddRequestClient<IGetStock>();
+});
+
 builder.Services.AddSignalR();
-
-builder.Services
-    .AddOptions<AppSettingsConfiguration>()
-    .Configure<IConfiguration>((opt, cfg) =>
-    {
-        cfg?.GetSection(nameof(AppSettingsConfiguration))?.Bind(opt);
-    });
-
-builder.Services.AddRefitClient<IStockApi>()
-    .ConfigureHttpClient((sp, client) =>
-    {
-        var e = sp.GetService<IOptions<AppSettingsConfiguration>>()?.Value?.StockApiUrl;
-        client.BaseAddress = new Uri(e);
-        client.Timeout = TimeSpan.FromMinutes(5);
-    });
 
 var app = builder.Build();
 

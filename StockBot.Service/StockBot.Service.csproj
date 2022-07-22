@@ -1,26 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-StockBot.Service-5BB96DD2-3499-43C7-A21C-79CE34A27887</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.0.5" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Refit" Version="6.3.2" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Startup\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FinancialChat.Domain\FinancialChat.Domain.csproj" />
     <ProjectReference Include="..\StockBot.Messages\StockBot.Messages.csproj" />
   </ItemGroup>
-
 </Project>
