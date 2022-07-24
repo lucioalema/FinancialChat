@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.SignalR.Client;
 using StockBot.Messages;
 using StockBot.Service.Services;
 
@@ -18,7 +19,12 @@ namespace StockBot.Service.Consumers
             if (stock != null)
             {
                 var botMessage = $"{stock.Split(',')[0]} quote is ${stock.Split(',')[6]} per share.";
-                //await Clients.All.SendAsync("ReceiveMessage", "BOT", botMessage);
+                var connection = new HubConnectionBuilder()
+                    .WithUrl("https://localhost:7198/chatHub")
+                    .Build();
+                await connection.StartAsync();
+                await connection.SendAsync("SendMessage", "BOT", botMessage, context.Message.Datetime);
+                await connection.DisposeAsync();
             }
         }
     }

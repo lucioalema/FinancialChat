@@ -10,16 +10,16 @@ namespace FinancialChat.Hubs
         private ISendEndpoint? _sendEndpoint;
         public ChatHub(ISendEndpointProvider sendEndpointProvider) => _sendEndpointProvider = sendEndpointProvider;
 
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string user, string message, DateTime? datetime = null)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.All.SendAsync("ReceiveMessage", user, message, datetime?.ToLongTimeString() ?? DateTime.Now.ToLongTimeString());
             if (message.Contains("/stock="))
             {
                 var stock_code = message.Split("/stock=")[1].Split(' ').FirstOrDefault();
                 if (!string.IsNullOrEmpty(stock_code))
                 {
                     _sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://localhost/stock"));
-                    await _sendEndpoint.Send<IGetStock>(new { StockCode = stock_code });
+                    await _sendEndpoint.Send<IGetStock>(new { StockCode = stock_code, datetime = DateTime.Now });
                 }
             }
         }
