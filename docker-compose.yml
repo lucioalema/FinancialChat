@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+  financialchat:
+    image: ${DOCKER_REGISTRY-}financialchat
+    build:
+      context: .
+      dockerfile: FinancialChat/Dockerfile
+    ports:
+        - 5198:80
+        - 7198:443
+    depends_on:
+      - rabbitmq
+  stockbotservice:
+    image: ${DOCKER_REGISTRY-}stockbotservice
+    build:
+      context: .
+      dockerfile: StockBot.Service/Dockerfile
+    depends_on:
+      - rabbitmq

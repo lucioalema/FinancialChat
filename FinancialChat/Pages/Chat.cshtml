@@ -1,0 +1,44 @@
+﻿@page
+@model FinancialChat.Pages.IndexModel;
+
+    <div class="container">
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="row">
+                <div class="col-2">User</div>
+                <div class="col-4">
+                    <select id="usersSelect" onchange="getMessages(this.value)">
+                    @{
+                        foreach (var user in Model.Users)
+                        {
+                            <option value="@user">@user</option>
+                        }
+                        <option value="0" selected>Select a user</option>
+                    }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">Message</div>
+                <div class="col-4"><input type="text" id="messageInput" /></div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-6">
+                    <input type="button" id="sendButton" value="Send Message" disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>

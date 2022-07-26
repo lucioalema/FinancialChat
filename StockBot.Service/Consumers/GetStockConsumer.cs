@@ -23,7 +23,7 @@ namespace StockBot.Service.Consumers
                     .WithUrl("https://localhost:7198/chatHub")
                     .Build();
                 await connection.StartAsync();
-                await connection.SendAsync("SendMessage", "BOT", botMessage, context.Message.Datetime);
+                await connection.SendAsync("SendBotMessage", context.Message.UserFrom, context.Message.UserTo, botMessage, context.Message.Datetime);
                 await connection.DisposeAsync();
             }
         }
