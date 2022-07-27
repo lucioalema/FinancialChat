@@ -79,7 +79,7 @@ namespace FinancialChat.Hubs
                     {
                         _sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("rabbitmq://localhost/stock"));
                         await _sendEndpoint
-                            .Send<IGetStock>(new { 
+                            .Send<GetStock>(new { 
                                 UserFrom = Context.User.Identity.Name, 
                                 UserTo = user, 
                                 StockCode = stock_code, 

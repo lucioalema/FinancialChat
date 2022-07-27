@@ -2,7 +2,7 @@
 
 namespace StockBot.Messages
 {
-    public class IGetStock
+    public class GetStock
     {
         public string UserFrom { get; set; }
         public string UserTo { get; set; }

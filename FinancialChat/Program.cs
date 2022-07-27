@@ -38,7 +38,7 @@ builder.Services.AddMassTransit(mt =>
         MessageDataDefaults.AlwaysWriteToRepository = false;
     });
 
-    mt.AddRequestClient<IGetStock>();
+    mt.AddRequestClient<GetStock>();
 });
 
 builder.Services.AddSignalR();

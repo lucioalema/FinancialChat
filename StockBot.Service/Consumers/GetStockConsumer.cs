@@ -5,7 +5,7 @@ using StockBot.Service.Services;
 
 namespace StockBot.Service.Consumers
 {
-    internal class GetStockConsumer : IConsumer<IGetStock>
+    public class GetStockConsumer : IConsumer<GetStock>
     {
         private readonly IStockApi _stockApi;
 
@@ -13,10 +13,10 @@ namespace StockBot.Service.Consumers
         {
             _stockApi = stockApi;
         }
-        public async Task Consume(ConsumeContext<IGetStock> context)
+        public async Task Consume(ConsumeContext<GetStock> context)
         {
             var stock = await _stockApi.GetStock(context.Message.StockCode);
-            if (stock != null)
+            if (!string.IsNullOrEmpty(stock))
             {
                 var botMessage = $"{stock.Split(',')[0]} quote is ${stock.Split(',')[6]} per share.";
                 var connection = new HubConnectionBuilder()
@@ -26,6 +26,8 @@ namespace StockBot.Service.Consumers
                 await connection.SendAsync("SendBotMessage", context.Message.UserFrom, context.Message.UserTo, botMessage, context.Message.Datetime);
                 await connection.DisposeAsync();
             }
+            else
+                throw new ArgumentException($"There's no stock with code {context.Message.StockCode}");
         }
     }
 }

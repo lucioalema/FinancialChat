@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialChat.Domain", "Fin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialChat", "FinancialChat\FinancialChat.csproj", "{47993EF4-90D5-4C4B-B2A6-1B947B34B5A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockBot.Service.Tests", "..\StockBot.Service.Tests\StockBot.Service.Tests.csproj", "{BCB8D169-785E-4DE6-909A-06263699CF81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockBot.Service.Tests", "..\StockBot.Service.Test\StockBot.Service.Tests.csproj", "{BCB8D169-785E-4DE6-909A-06263699CF81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
